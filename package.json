@@ -1,0 +1,27 @@
+{
+  "name": "docker-site",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "bootstrap": "^3.3.7",
+    "react-scripts": "0.7.0",
+    "string-hash": "^1.1.1"
+  },
+  "dependencies": {
+    "immutable": "^3.8.1",
+    "jquery": "^3.1.1",
+    "react": "^15.4.1",
+    "react-bootstrap": "^0.30.7",
+    "react-dom": "^15.4.1",
+    "react-redux": "^4.4.6",
+    "react-router": "^3.0.0",
+    "react-router-bootstrap": "^0.23.1",
+    "redux": "^3.6.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
