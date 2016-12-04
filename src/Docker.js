@@ -40,4 +40,10 @@ export default class Docker {
   loadService(name) {
     return $.getJSON(this.url + '/services/' + name);
   }
+  loadTasks() {
+    return $.getJSON(this.url + '/tasks');
+  }
+  loadTask(name) {
+    return $.getJSON(this.url + '/tasks/' + name);
+  }
 }

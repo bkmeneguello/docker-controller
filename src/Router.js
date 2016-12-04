@@ -17,6 +17,8 @@ import Network from './Network';
 import Swarm from './Swarm';
 import Services from './Services';
 import Service from './Service';
+import Tasks from './Tasks';
+import Task from './Task';
 
 export default <Provider store={store}>
   <Router history={browserHistory}>
@@ -35,6 +37,8 @@ export default <Provider store={store}>
       <Route path="hosts/:host/swarm" component={Swarm}/>
       <Route path="hosts/:host/services" component={Services}/>
       <Route path="hosts/:host/services/:service" component={Service}/>
+      <Route path="hosts/:host/tasks" component={Tasks}/>
+      <Route path="hosts/:host/tasks/:task" component={Task}/>
     </Route>
   </Router>
 </Provider>;
