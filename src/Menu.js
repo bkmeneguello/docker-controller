@@ -17,10 +17,10 @@ let Menu = withRouter(React.createClass({
               <li><Link to={'/hosts/' + this.props.params.host + '/images'} activeStyle={ACTIVE_STYLE}>images</Link></li>
               <li><Link to={'/hosts/' + this.props.params.host + '/volumes'} activeStyle={ACTIVE_STYLE}>volumes</Link></li>
               <li><Link to={'/hosts/' + this.props.params.host + '/networks'} activeStyle={ACTIVE_STYLE}>networks</Link></li>
+              <li><Link to={'/hosts/' + this.props.params.host + '/swarm'} activeStyle={ACTIVE_STYLE}>swarm</Link></li>
             </ul>
             }
           </li>
-          <li><Link to="/swarms">swarms</Link></li>
         </ul>
       </div>
     );

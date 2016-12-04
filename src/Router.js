@@ -14,6 +14,7 @@ import Volumes from './Volumes';
 import Volume from './Volume';
 import Networks from './Networks';
 import Network from './Network';
+import Swarm from './Swarm';
 
 export default <Provider store={store}>
   <Router history={browserHistory}>
@@ -29,6 +30,7 @@ export default <Provider store={store}>
       <Route path="hosts/:host/volumes/:volume" component={Volume}/>
       <Route path="hosts/:host/networks" component={Networks}/>
       <Route path="hosts/:host/networks/:network" component={Network}/>
+      <Route path="hosts/:host/swarm" component={Swarm}/>
     </Route>
   </Router>
 </Provider>;

@@ -31,4 +31,7 @@ export default class Docker {
   loadNetwork(name) {
     return $.getJSON(this.url + '/networks/' + name);
   }
+  loadSwarm() {
+    return $.getJSON(this.url + '/swarm');
+  }
 }
