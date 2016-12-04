@@ -34,4 +34,10 @@ export default class Docker {
   loadSwarm() {
     return $.getJSON(this.url + '/swarm');
   }
+  loadServices() {
+    return $.getJSON(this.url + '/services');
+  }
+  loadService(name) {
+    return $.getJSON(this.url + '/services/' + name);
+  }
 }
