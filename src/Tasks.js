@@ -11,7 +11,7 @@ let TasksSummary = withRouter(React.createClass({
     return (
       <div>
         <div>{this.props.task.ID}</div>
-        <LinkContainer to={'/hosts/' + this.props.params.host + '/tasks/' + this.props.task.ID}>
+        <LinkContainer to={'/hosts/' + this.props.params.host + '/swarm/tasks/' + this.props.task.ID}>
           <Button bsStyle="primary">Select</Button>
         </LinkContainer>
       </div>

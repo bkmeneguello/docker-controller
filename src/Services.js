@@ -11,7 +11,7 @@ let ServicesSummary = withRouter(React.createClass({
     return (
       <div>
         <div>{this.props.service.Spec.Name}</div>
-        <LinkContainer to={'/hosts/' + this.props.params.host + '/services/' + this.props.service.Spec.Name}>
+        <LinkContainer to={'/hosts/' + this.props.params.host + '/swarm/services/' + this.props.service.Spec.Name}>
           <Button bsStyle="primary">Select</Button>
         </LinkContainer>
       </div>

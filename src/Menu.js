@@ -19,8 +19,8 @@ let Menu = withRouter(React.createClass({
               <li><Link to={'/hosts/' + host + '/volumes'} activeStyle={ACTIVE_STYLE}>volumes</Link></li>
               <li><Link to={'/hosts/' + host + '/networks'} activeStyle={ACTIVE_STYLE}>networks</Link></li>
               <li><Link to={'/hosts/' + host + '/swarm'} activeStyle={ACTIVE_STYLE}>swarm</Link></li>
-              <li><Link to={'/hosts/' + host + '/services'} activeStyle={ACTIVE_STYLE}>services</Link></li>
-              <li><Link to={'/hosts/' + host + '/tasks'} activeStyle={ACTIVE_STYLE}>tasks</Link></li>
+              <li><Link to={'/hosts/' + host + '/swarm/services'} activeStyle={ACTIVE_STYLE}>services</Link></li>
+              <li><Link to={'/hosts/' + host + '/swarm/tasks'} activeStyle={ACTIVE_STYLE}>tasks</Link></li>
             </ul>
             }
           </li>

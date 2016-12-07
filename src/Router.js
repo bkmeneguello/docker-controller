@@ -24,21 +24,39 @@ export default <Provider store={store}>
   <Router history={browserHistory}>
     <Route path="/" component={App}>
       <IndexRoute component={Dashboard}/>
-      <Route path="hosts" component={Hosts}/>
-      <Route path="hosts/:host" component={Host}/>
-      <Route path="hosts/:host/containers" component={Containers}/>
-      <Route path="hosts/:host/containers/:container" component={Container}/>
-      <Route path="hosts/:host/images" component={Images}/>
-      <Route path="hosts/:host/images/:image" component={Image}/>
-      <Route path="hosts/:host/volumes" component={Volumes}/>
-      <Route path="hosts/:host/volumes/:volume" component={Volume}/>
-      <Route path="hosts/:host/networks" component={Networks}/>
-      <Route path="hosts/:host/networks/:network" component={Network}/>
-      <Route path="hosts/:host/swarm" component={Swarm}/>
-      <Route path="hosts/:host/services" component={Services}/>
-      <Route path="hosts/:host/services/:service" component={Service}/>
-      <Route path="hosts/:host/tasks" component={Tasks}/>
-      <Route path="hosts/:host/tasks/:task" component={Task}/>
+      <Route path="hosts">
+        <IndexRoute component={Hosts}/>
+        <Route path=":host">
+          <IndexRoute component={Host}/>
+          <Route path="containers">
+            <IndexRoute component={Containers}/>
+            <Route path=":container" component={Container}/>
+          </Route>
+          <Route path="images">
+            <IndexRoute component={Images}/>
+            <Route path=":image" component={Image}/>
+          </Route>
+          <Route path="volumes">
+            <IndexRoute component={Volumes}/>
+            <Route path=":volume" component={Volume}/>
+          </Route>
+          <Route path="networks">
+            <IndexRoute component={Networks}/>
+            <Route path=":network" component={Network}/>
+          </Route>
+          <Route path="swarm">
+            <IndexRoute component={Swarm}/>
+            <Route path="services">
+              <IndexRoute component={Services}/>
+              <Route path=":service" component={Service}/>
+            </Route>
+            <Route path="tasks">
+              <IndexRoute component={Tasks}/>
+              <Route path=":task" component={Task}/>
+            </Route>
+          </Route>
+        </Route>
+      </Route>
     </Route>
   </Router>
 </Provider>;
