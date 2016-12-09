@@ -15,6 +15,8 @@ import Volume from './Volume';
 import Networks from './Networks';
 import Network from './Network';
 import Swarm from './Swarm';
+import Nodes from './Nodes';
+import Node from './Node';
 import Services from './Services';
 import Service from './Service';
 import Tasks from './Tasks';
@@ -46,6 +48,10 @@ export default <Provider store={store}>
           </Route>
           <Route path="swarm">
             <IndexRoute component={Swarm}/>
+            <Route path="nodes">
+              <IndexRoute component={Nodes}/>
+              <Route path=":node" component={Node}/>
+            </Route>
             <Route path="services">
               <IndexRoute component={Services}/>
               <Route path=":service" component={Service}/>
