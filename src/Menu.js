@@ -8,7 +8,7 @@ const ACTIVE_STYLE = {fontWeight: 'bold'};
 let Menu = withRouter(connect(
   (state, ownProps) => {
     return {
-      docker: new Docker(state.getIn(['hosts', ownProps.params.host]))
+      docker: ownProps.params.host ? new Docker(state.getIn(['hosts', ownProps.params.host])) : null
     }
   }
 )(React.createClass({
@@ -48,7 +48,7 @@ let Menu = withRouter(connect(
     );
   },
   componentDidMount: function() {
-    this.props.docker.loadSwarm().then(() => this.setState({swarm: true}));
+    this.props.docker && this.props.docker.loadSwarm().then(() => this.setState({swarm: true}));
   }
 })));
 
