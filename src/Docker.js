@@ -25,6 +25,15 @@ export default class Docker {
   loadVolume(name) {
     return $.getJSON(this.url + '/volumes/' + name);
   }
+  createVolume(volume) {
+    return $.ajax({
+      type: 'POST',
+      url: this.url + '/volumes/create',
+      data: JSON.stringify(volume),
+      contentType: 'application/json',
+      dataType: 'json'
+    });
+  }
   loadNetworks() {
     return $.getJSON(this.url + '/networks');
   }

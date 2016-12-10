@@ -10,6 +10,7 @@ import Containers from './Containers';
 import Container from './Container';
 import Images from './Images';
 import Image from './Image';
+import NewVolume from './NewVolume';
 import Volumes from './Volumes';
 import Volume from './Volume';
 import Networks from './Networks';
@@ -38,6 +39,7 @@ export default <Provider store={store}>
             <IndexRoute component={Images}/>
             <Route path=":image" component={Image}/>
           </Route>
+          <Route path="volume" component={NewVolume}/>
           <Route path="volumes">
             <IndexRoute component={Volumes}/>
             <Route path=":volume" component={Volume}/>

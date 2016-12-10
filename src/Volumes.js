@@ -38,6 +38,9 @@ export default connect(
   },
   render: function() {
     return (<Layout>
+        <LinkContainer to={'/hosts/' + this.props.params.host + '/volume'}>
+          <Button bsStyle="primary">Add Volume</Button>
+        </LinkContainer>
         {Object.keys(this.state.volumes).map((volume) => {
           return <VolumesSummary key={volume} volume={this.state.volumes[volume]}/>
         })}
