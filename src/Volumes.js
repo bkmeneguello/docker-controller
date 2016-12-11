@@ -3,8 +3,8 @@ import { connect } from 'react-redux'
 import { withRouter } from 'react-router';
 import { Button } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import $ from 'jquery';
-import Layout from './Layout'
+import Docker from './Docker';
+import Layout, { AlertMixin } from './Layout'
 
 let VolumesSummary = withRouter(React.createClass({
   render: function() {
@@ -16,37 +16,51 @@ let VolumesSummary = withRouter(React.createClass({
         <LinkContainer to={'/hosts/' + this.props.params.host + '/volumes/' + this.props.volume.Name}>
           <Button bsStyle="primary">Select</Button>
         </LinkContainer>
+        {' '}
+        <Button bsStyle="danger" onClick={() => this.props.removeVolume(this.props.volume.Name)}>Remove</Button>
       </div>
     );
   }
 }));
 
-export default connect(
+let Volumes = connect(
   (state, ownProps) => {
     return {
-      url: state.getIn(['hosts', ownProps.params.host])
-    }
-  },
-  (dispatch, ownProps) => {
-    return {}
+      docker: new Docker(state.getIn(['hosts', ownProps.params.host]))
+    };
   }
 )(React.createClass({
+  mixins: [AlertMixin],
   getInitialState: function() {
     return {
-      volumes: {}
+      volumes: {
+        Volumes: []
+      }
     };
   },
   render: function() {
-    return (<Layout>
+    return (
+      <Layout>
         <LinkContainer to={'/hosts/' + this.props.params.host + '/volume'}>
           <Button bsStyle="primary">Add Volume</Button>
         </LinkContainer>
-        {Object.keys(this.state.volumes).map((volume) => {
-          return <VolumesSummary key={volume} volume={this.state.volumes[volume]}/>
+        {(this.state.volumes.Volumes || []).map((volume) => {
+          return <VolumesSummary key={volume.Name} volume={volume} docker={this.props.docker} removeVolume={this.removeVolume}/>
         })}
-      </Layout>);
+      </Layout>
+    );
   },
   componentDidMount: function() {
-    $.getJSON(this.props.url + '/volumes').then((volumes) => this.setState({volumes: volumes.Volumes}));
+    this.props.docker.loadVolumes().then(volumes => this.setState({volumes: volumes}));
+  },
+  removeVolume: function(name) {
+    this.props.docker.removeVolume(name).then(() => {
+      this.props.docker.loadVolumes().then(volumes => {
+        this.setState({volumes: volumes})
+      });
+      this.alert('success', 'volume removed!');
+    });
   }
 }));
+
+export default Volumes;

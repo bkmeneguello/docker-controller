@@ -34,6 +34,13 @@ export default class Docker {
       dataType: 'json'
     });
   }
+  removeVolume(name) {
+    return $.ajax({
+      type: 'DELETE',
+      url: this.url + '/volumes/' + name,
+      contentType: 'application/json'
+    });
+  }
   loadNetworks() {
     return $.getJSON(this.url + '/networks');
   }

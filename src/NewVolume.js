@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { FormGroup, ControlLabel, FormControl, HelpBlock, Button, Row, Col } from 'react-bootstrap';
 import { Property, CompositeProperty, RequiredRule, RegexRule } from './Validation'
 import { SimpleValue } from './Common'
-import Layout from './Layout';
+import Layout, { AlertMixin } from './Layout';
 import Docker from './Docker';
 
 let NewVolume = connect(
@@ -13,6 +13,7 @@ let NewVolume = connect(
     };
   }
 )(React.createClass({
+  mixins: [AlertMixin],
   getInitialState: function() {
     return {
       name: new Property(undefined, [RequiredRule, new RegexRule(/^[\w-]*$/)]),
@@ -96,12 +97,6 @@ let NewVolume = connect(
       return change
     })
   },
-  handleLabelNameChange: function(event) {
-    this.setState({labelName: event.target.value});
-  },
-  handleLabelValueChange: function(event) {
-    this.setState({labelValue: event.target.value});
-  },
   addOption: function() {
     this.setState((prevState, props) => {
       let newOption = {}
@@ -171,24 +166,27 @@ let NewVolume = connect(
     return valid;
   },
   confirm: function() {
-    if (this.validate()) {
+    if (this.isValid()) {
       this.props.docker.createVolume({
         Name: this.state.name.value,
         Driver: this.state.driver.value,
         DriverOpts: this.state.options,
         Labels: this.state.labels,
-      }).then(() => this.close());
+      }).done(() => this.close('success', 'success!'))
+        .fail(() => this.close('error', 'failure!'));
     }
   },
   cancel: function() {
     this.close();
   },
-  close: function() {
-    if ((this.props.location.state || {}).modal) {
-      this.props.router.goBack();
-    } else {
-      this.props.router.push('/hosts/' + this.props.params.host + '/volumes');
-    }
+  close: function(style, alert) {
+    this.alert('success', 'volume created!').then(() => {
+      if ((this.props.location.state || {}).modal) {
+        this.props.router.goBack();
+      } else {
+        this.props.router.push('/hosts/' + this.props.params.host + '/volumes');
+      }
+    });
   },
   componentDidMount: function() {
     this.props.docker.loadInfo().then((info) => this.setState({drivers: info.Plugins.Volume}));

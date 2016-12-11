@@ -23,7 +23,7 @@ import Service from './Service';
 import Tasks from './Tasks';
 import Task from './Task';
 
-export default <Provider store={store}>
+let Routes = <Provider store={store}>
   <Router history={browserHistory}>
     <Route path="/" component={App}>
       <IndexRoute component={Dashboard}/>
@@ -68,3 +68,5 @@ export default <Provider store={store}>
     </Route>
   </Router>
 </Provider>;
+
+export default Routes;

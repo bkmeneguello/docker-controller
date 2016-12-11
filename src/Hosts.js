@@ -13,6 +13,7 @@ let HostSummary = connect(
   },
   (dispatch, props) => {
     return {
+      dispatch: dispatch,
       removeHost: function() {
         dispatch({type: 'REMOVE_HOST', name: props.host});
       }

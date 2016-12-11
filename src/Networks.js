@@ -24,9 +24,6 @@ let Networks = connect(
     return {
       docker: new Docker(state.getIn(['hosts', ownProps.params.host]))
     }
-  },
-  (dispatch, ownProps) => {
-    return {}
   }
 )(React.createClass({
   getInitialState: function() {
