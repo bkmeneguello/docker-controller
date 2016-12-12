@@ -172,21 +172,20 @@ let NewVolume = connect(
         Driver: this.state.driver.value,
         DriverOpts: this.state.options,
         Labels: this.state.labels,
-      }).done(() => this.close('success', 'success!'))
-        .fail(() => this.close('error', 'failure!'));
+      }).done(() => this.alert('success', 'success!'))
+        .fail(() => this.alert('error', 'failure!'))
+        .always(() => this.close());
     }
   },
   cancel: function() {
     this.close();
   },
   close: function(style, alert) {
-    this.alert('success', 'volume created!').then(() => {
-      if ((this.props.location.state || {}).modal) {
-        this.props.router.goBack();
-      } else {
-        this.props.router.push('/hosts/' + this.props.params.host + '/volumes');
-      }
-    });
+    if ((this.props.location.state || {}).modal) {
+      this.props.router.goBack();
+    } else {
+      this.props.router.push('/hosts/' + this.props.params.host + '/volumes');
+    }
   },
   componentDidMount: function() {
     this.props.docker.loadInfo().then((info) => this.setState({drivers: info.Plugins.Volume}));
