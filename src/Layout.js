@@ -3,7 +3,6 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import Swipeable from 'react-swipeable';
 import { Alert } from 'react-bootstrap';
-import $ from 'jquery';
 import Menu from './Menu'
 
 let AlertMixin = {
@@ -53,9 +52,9 @@ let Layout = connect(
     }
     return (
       <div id="wrapper" className={this.toggled()}>
-        <Swipeable onSwipedLeft={this.hide} onSwipedRight={this.show}>
+        <Swipeable onSwipedLeft={this.hide} onSwipedRight={this.show} className="swipeable">
           <Menu/>
-          <section id="page-content-wrapper" className="container-fluid" style={{minHeight: '100vh'}}>
+          <section id="page-content-wrapper" className="container-fluid">
             {this.props.alert &&
               <Alert bsStyle={this.props.alert.style} onDismiss={this.props.handleAlertDismiss}>
                 {this.props.alert.title && <h4>{this.props.alert.title}</h4>}
