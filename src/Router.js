@@ -10,7 +10,7 @@ import Containers from './Containers';
 import Container from './Container';
 import Images from './Images';
 import Image from './Image';
-import NewVolume from './NewVolume';
+import VolumeEdit from './VolumeEdit';
 import Volumes from './Volumes';
 import Volume from './Volume';
 import Networks from './Networks';
@@ -39,7 +39,7 @@ let Routes = <Provider store={store}>
             <IndexRoute component={Images}/>
             <Route path=":image" component={Image}/>
           </Route>
-          <Route path="volume" component={NewVolume}/>
+          <Route path="volume" component={VolumeEdit}/>
           <Route path="volumes">
             <IndexRoute component={Volumes}/>
             <Route path=":volume" component={Volume}/>
