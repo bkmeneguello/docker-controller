@@ -24,7 +24,7 @@ let AlertMixin = {
 }
 
 let isSmallScreen = function() {
-  return $(window).width() < 768;
+  return window.innerWidth < 768;
 }
 
 let Layout = connect(
@@ -44,7 +44,7 @@ let Layout = connect(
 )(withRouter(React.createClass({
   getInitialState: function() {
     return {
-      toggled: !isSmallScreen()
+      toggled: false
     };
   },
   render: function() {
@@ -53,7 +53,7 @@ let Layout = connect(
     }
     return (
       <div id="wrapper" className={this.toggled()}>
-        <Swipeable onSwiped={this.hide} onSwipedRight={this.show}>
+        <Swipeable onSwipedLeft={this.hide} onSwipedRight={this.show}>
           <Menu/>
           <section id="page-content-wrapper" className="container-fluid" style={{minHeight: '100vh'}}>
             {this.props.alert &&
