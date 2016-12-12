@@ -1,7 +1,9 @@
 import React from 'react';
 import { withRouter } from 'react-router';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
+import Swipeable from 'react-swipeable';
 import { Alert } from 'react-bootstrap';
+import $ from 'jquery';
 import Menu from './Menu'
 
 let AlertMixin = {
@@ -21,6 +23,10 @@ let AlertMixin = {
   }
 }
 
+let isSmallScreen = function() {
+  return $(window).width() < 768;
+}
+
 let Layout = connect(
   (state, ownProps) => {
     return {
@@ -38,7 +44,7 @@ let Layout = connect(
 )(withRouter(React.createClass({
   getInitialState: function() {
     return {
-      toggled: false
+      toggled: !isSmallScreen()
     };
   },
   render: function() {
@@ -47,17 +53,19 @@ let Layout = connect(
     }
     return (
       <div id="wrapper" className={this.toggled()}>
-        <Menu/>
-        <section id="page-content-wrapper" className="container-fluid">
-          {this.props.alert &&
-            <Alert bsStyle={this.props.alert.style} onDismiss={this.props.handleAlertDismiss}>
-              {this.props.alert.title && <h4>{this.props.alert.title}</h4>}
-              {this.props.alert.summary && <strong>{this.props.alert.summary} </strong>}
-              {this.props.alert.message}
-            </Alert>
-          }
-          {this.props.children}
-        </section>
+        <Swipeable onSwiped={this.hide} onSwipedRight={this.show}>
+          <Menu/>
+          <section id="page-content-wrapper" className="container-fluid" style={{minHeight: '100vh'}}>
+            {this.props.alert &&
+              <Alert bsStyle={this.props.alert.style} onDismiss={this.props.handleAlertDismiss}>
+                {this.props.alert.title && <h4>{this.props.alert.title}</h4>}
+                {this.props.alert.summary && <strong>{this.props.alert.summary} </strong>}
+                {this.props.alert.message}
+              </Alert>
+            }
+            {this.props.children}
+          </section>
+        </Swipeable>
       </div>
     );
   },
@@ -68,6 +76,12 @@ let Layout = connect(
     this.setState((prev, props) => {
       return {toggled: !prev.toggled};
     });
+  },
+  hide: function() {
+    this.setState({toggled: !isSmallScreen()});
+  },
+  show: function() {
+    this.setState({toggled: isSmallScreen()});
   }
 })));
 
