@@ -13,6 +13,15 @@ export default class Docker {
   loadContainer(name) {
     return $.getJSON(this.url + '/containers/' + name + '/json');
   }
+  createContainer(container, name) {
+    return $.ajax({
+      type: 'POST',
+      url: this.url + '/containers/create' + (name ? '?name=' + name : ''),
+      data: JSON.stringify(container),
+      contentType: 'application/json',
+      dataType: 'json'
+    });
+  }
   loadImages() {
     return $.getJSON(this.url + '/images/json');
   }

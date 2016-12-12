@@ -6,6 +6,7 @@ import App from './App';
 import Dashboard from './Dashboard';
 import Hosts from './Hosts';
 import Host from './Host';
+import ContainerEdit from './ContainerEdit'
 import Containers from './Containers';
 import Container from './Container';
 import Images from './Images';
@@ -31,6 +32,7 @@ let Routes = <Provider store={store}>
         <IndexRoute component={Hosts}/>
         <Route path=":host">
           <IndexRoute component={Host}/>
+          <Route path="container" component={ContainerEdit}/>
           <Route path="containers">
             <IndexRoute component={Containers}/>
             <Route path=":container" component={Container}/>

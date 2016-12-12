@@ -39,11 +39,16 @@ let Containers = connect(
     };
   },
   render: function() {
-    return (<Layout>
+    return (
+      <Layout>
+        <LinkContainer to={'/hosts/' + this.props.params.host + '/container'}>
+          <Button bsStyle="primary">Add Container</Button>
+        </LinkContainer>
         {this.state.containers.map((container) => {
           return <ContainerSummary key={container.Id} container={container}/>
         })}
-      </Layout>);
+      </Layout>
+    );
   },
   componentDidMount: function() {
     this.props.docker.loadContainers().then((containers) => this.setState({containers: containers}));

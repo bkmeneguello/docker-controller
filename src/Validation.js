@@ -124,3 +124,24 @@ export class CompositeProperty {
     return Object.keys(this._validations || {}).map(name => this._validations[name]).reduce((validations, validation) => validations.concat(validation), []);
   }
 }
+
+let PropertyChangeMixin = {
+  handlePropertyChange: function(propertyName, event) {
+    let value = event.target.value;
+    let change = {};
+    this.setState((prevState, props) => {
+      change[propertyName] = prevState[propertyName].withValue(value).validate();
+      return change
+    })
+  },
+  handleCompositePropertyChange: function(propertyName, propName, event) {
+    let value = event.target.value;
+    let change = {};
+    this.setState((prevState, props) => {
+      change[propertyName] = prevState[propertyName].withPropValue(propName, value).validate();
+      return change
+    })
+  }
+}
+
+export { PropertyChangeMixin };
