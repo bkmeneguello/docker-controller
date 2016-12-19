@@ -1,12 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Docker from './Docker';
 import Layout from './Layout';
 
 let Task = connect(
   (state, ownProps) => {
     return {
-      docker: new Docker(state.getIn(['hosts', ownProps.params.host]))
+      docker: state.hosts[ownProps.params.host]
     }
   },
   (dispatch, ownProps) => {

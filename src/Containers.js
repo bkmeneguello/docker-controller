@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { Button } from 'react-bootstrap';
 import { Link, withRouter } from 'react-router';
 import { LinkContainer } from 'react-router-bootstrap';
-import Docker from './Docker';
 import Layout from './Layout';
 
 let ContainerSummary = withRouter(React.createClass({
@@ -26,7 +25,7 @@ let ContainerSummary = withRouter(React.createClass({
 let Containers = connect(
   (state, ownProps) => {
     return {
-      docker: new Docker(state.getIn(['hosts', ownProps.params.host]))
+      docker: state.hosts[ownProps.params.host]
     }
   },
   (dispatch, ownProps) => {

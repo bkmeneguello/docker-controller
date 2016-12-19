@@ -2,14 +2,11 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Button, FormGroup, ControlLabel, FormControl } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
-import Docker from './Docker';
 import Layout from './Layout';
 
 let HostSummary = connect(
-  (state, props) => {
-    return {
-      docker: new Docker(state.getIn(['hosts', props.host]))
-    }
+  (state, ownProps) => {
+    return {}
   },
   (dispatch, props) => {
     return {
@@ -49,7 +46,7 @@ let HostSummary = connect(
 let Hosts = connect(
   (state, ownProps) => {
     return {
-      hosts: state.get('hosts')
+      hosts: state.hosts
     }
   },
   (dispatch, ownProps) => {
@@ -85,8 +82,8 @@ let Hosts = connect(
             <Button onClick={this.cancelHost}>Cancel</Button>
           </form>
         )) || <Button bsStyle="primary" onClick={this.newHost}>New Host</Button>}
-        {this.props.hosts.keySeq().toArray().map((host) => {
-          return <HostSummary key={host} host={host}/>
+        {Object.keys(this.props.hosts).map((host) => {
+          return <HostSummary key={host} host={host} docker={this.props.hosts[host]}/>
         })}
       </Layout>
     )

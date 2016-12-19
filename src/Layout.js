@@ -9,7 +9,7 @@ let AlertMixin = {
   alert: function(style, alert) {
     switch (typeof(alert)) {
       case 'string':
-        return this.alert(style, {message: alert});
+        return this.alert(style, {title: alert});
       case 'function':
         return this.alert(style, alert());
       case 'object':
@@ -29,7 +29,7 @@ let isSmallScreen = function() {
 let Layout = connect(
   (state, ownProps) => {
     return {
-      alert: state.get('alert')
+      alert: state.alert
     }
   },
   (dispatch, props) => {
@@ -47,7 +47,7 @@ let Layout = connect(
     };
   },
   render: function() {
-    if (this.props.alert && this.props.alert.timeout !== 0) {
+    if (this.props.alert && this.props.alert.timeout !== 0 && this.props.alert.style !== 'danger') {
       setTimeout(this.props.handleAlertDismiss, this.props.alert.timeout || 5000);
     }
     return (

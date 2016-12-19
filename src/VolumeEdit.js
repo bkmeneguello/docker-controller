@@ -4,12 +4,11 @@ import { FormGroup, ControlLabel, FormControl, HelpBlock, Button, Row, Col } fro
 import { Property, CompositeProperty, RequiredRule, RegexRule, PropertyChangeMixin } from './Validation'
 import { SimpleValue } from './Common'
 import Layout, { AlertMixin } from './Layout';
-import Docker from './Docker';
 
 let VolumeEdit = connect(
   (state, ownProps) => {
     return {
-      docker: new Docker(state.getIn(['hosts', ownProps.params.host]))
+      docker: state.hosts[ownProps.params.host]
     };
   }
 )(React.createClass({
@@ -157,7 +156,7 @@ let VolumeEdit = connect(
         DriverOpts: this.state.options,
         Labels: this.state.labels,
       }).done(() => this.alert('success', 'success!'))
-        .fail(() => this.alert('error', 'failure!'))
+        .fail((error) => this.alert('danger', {title: 'failure!', message: error.responseJSON.message}))
         .always(() => this.close());
     }
   },

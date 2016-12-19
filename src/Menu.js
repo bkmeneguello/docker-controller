@@ -1,14 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router';
-import Docker from './Docker';
 
 const ACTIVE_STYLE = {fontWeight: 'bold'};
 
 let Menu = withRouter(connect(
   (state, ownProps) => {
     return {
-      docker: ownProps.params.host ? new Docker(state.getIn(['hosts', ownProps.params.host])) : null
+      docker: ownProps.params.host ? state.hosts[ownProps.params.host] : null
     }
   }
 )(React.createClass({

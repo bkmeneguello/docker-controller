@@ -1,13 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Docker from './Docker';
 import Layout from './Layout';
 import hash from 'string-hash';
 
 let Image = connect(
   (state, ownProps) => {
     return {
-      docker: new Docker(state.getIn(['hosts', ownProps.params.host]))
+      docker: state.hosts[ownProps.params.host]
     }
   },
   (dispatch, ownProps) => {

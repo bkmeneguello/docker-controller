@@ -4,77 +4,85 @@ export default class Docker {
   constructor(url) {
     this.url = url;
   }
-  loadInfo() {
-    return $.getJSON(this.url + '/info');
+  getJSON(path) {
+    return $.getJSON(this.url + '/' + path);
   }
-  loadContainers() {
-    return $.getJSON(this.url + '/containers/json');
-  }
-  loadContainer(name) {
-    return $.getJSON(this.url + '/containers/' + name + '/json');
-  }
-  createContainer(container, name) {
+  postJSON(path, data) {
     return $.ajax({
       type: 'POST',
-      url: this.url + '/containers/create' + (name ? '?name=' + name : ''),
-      data: JSON.stringify(container),
+      url: this.url + '/' + path,
+      data: JSON.stringify(data),
       contentType: 'application/json',
       dataType: 'json'
     });
   }
-  loadImages() {
-    return $.getJSON(this.url + '/images/json');
-  }
-  loadImage(name) {
-    return $.getJSON(this.url + '/images/' + name + '/json');
-  }
-  loadVolumes() {
-    return $.getJSON(this.url + '/volumes');
-  }
-  loadVolume(name) {
-    return $.getJSON(this.url + '/volumes/' + name);
-  }
-  createVolume(volume) {
-    return $.ajax({
-      type: 'POST',
-      url: this.url + '/volumes/create',
-      data: JSON.stringify(volume),
-      contentType: 'application/json',
-      dataType: 'json'
-    });
-  }
-  removeVolume(name) {
+  deleteJSON(path) {
     return $.ajax({
       type: 'DELETE',
-      url: this.url + '/volumes/' + name,
+      url: this.url + '/' + path,
       contentType: 'application/json'
     });
   }
+  loadInfo() {
+    return this.getJSON('info');
+  }
+  loadContainers() {
+    return this.getJSON('containers/json');
+  }
+  loadContainer(name) {
+    return this.getJSON('containers/' + name + '/json');
+  }
+  createContainer(container, name) {
+    return this.postJSON('containers/create' + (name ? '?name=' + name : ''), container).done((response) => {
+      return this.startContainer(response.Id);
+    });
+  }
+  startContainer(name) {
+    return this.postJSON('containers/' + name + '/start');
+  }
+  loadImages() {
+    return this.getJSON('images/json');
+  }
+  loadImage(name) {
+    return this.getJSON('images/' + name + '/json');
+  }
+  loadVolumes() {
+    return this.getJSON('volumes');
+  }
+  loadVolume(name) {
+    return this.getJSON('volumes/' + name);
+  }
+  createVolume(volume) {
+    return this.postJSON('volumes/create', volume);
+  }
+  removeVolume(name) {
+    return this.deleteJSON('volumes/' + name);
+  }
   loadNetworks() {
-    return $.getJSON(this.url + '/networks');
+    return this.getJSON('networks');
   }
   loadNetwork(name) {
-    return $.getJSON(this.url + '/networks/' + name);
+    return this.getJSON('networks/' + name);
   }
   loadSwarm() {
-    return $.getJSON(this.url + '/swarm');
+    return this.getJSON('swarm');
   }
   loadNodes() {
-    return $.getJSON(this.url + '/nodes');
+    return this.getJSON('nodes');
   }
   loadNode(name) {
-    return $.getJSON(this.url + '/nodes/' + name);
+    return this.getJSON('nodes/' + name);
   }
   loadServices() {
-    return $.getJSON(this.url + '/services');
+    return this.getJSON('services');
   }
   loadService(name) {
-    return $.getJSON(this.url + '/services/' + name);
+    return this.getJSON('services/' + name);
   }
   loadTasks() {
-    return $.getJSON(this.url + '/tasks');
+    return this.getJSON('tasks');
   }
   loadTask(name) {
-    return $.getJSON(this.url + '/tasks/' + name);
+    return this.getJSON('tasks/' + name);
   }
 }

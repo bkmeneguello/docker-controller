@@ -1,20 +1,30 @@
-import { fromJS } from 'immutable';
 import { createStore } from 'redux';
+import Docker from './Docker';
 
+let hosts = JSON.parse(localStorage.getItem('hosts')) || {};
 let defaultState = {
-  hosts: JSON.parse(localStorage.getItem('hosts')) || {}
+  hosts: Object.keys(hosts).reduce((newHosts, host) => {
+    newHosts[host] = new Docker(hosts[host]);
+    return newHosts;
+  }, {})
 };
 
-let dockerApp = (state = fromJS(defaultState), action) => {
+let dockerApp = (state = defaultState, action) => {
   switch (action.type) {
-    case 'REMOVE_HOST':
-      return state.deleteIn(['hosts', action.name]);
     case 'ADD_HOST':
-      return state.setIn(['hosts', action.host.name], action.host.url);
+      let newHost = {};
+      newHost[action.host.name] = new Docker(action.host.url);
+      return Object.assign({}, state, {'hosts': Object.assign({}, state.hosts, newHost)});
+    case 'REMOVE_HOST':
+      let newHosts = Object.assign({}, state.hosts);
+      delete newHosts[action.name];
+      return Object.assign({}, state, {hosts: newHosts});
     case 'ALERT':
-      return state.set('alert', action.alert);
+      return Object.assign({}, state, {'alert': action.alert});
     case 'DISMISS_ALERT':
-      return state.remove('alert');
+      let newState = Object.assign({}, state);
+      delete newState.alert;
+      return newState;
     default:
       return state;
   }
@@ -23,7 +33,11 @@ let dockerApp = (state = fromJS(defaultState), action) => {
 let store = createStore(dockerApp, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 store.subscribe(() => {
-  localStorage.setItem('hosts', JSON.stringify(store.getState().get('hosts').toJS()));
+  let hosts = store.getState().hosts;
+  localStorage.setItem('hosts', JSON.stringify(Object.keys(hosts).reduce((newHosts, host) => {
+    newHosts[host] = hosts[host].url;
+    return newHosts;
+  }, {})));
 });
 
 export default store;
