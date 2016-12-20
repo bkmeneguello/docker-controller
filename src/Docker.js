@@ -26,8 +26,9 @@ export default class Docker {
   loadInfo() {
     return this.getJSON('info');
   }
-  loadContainers() {
-    return this.getJSON('containers/json');
+  loadContainers(options = {}) {
+    let params = $.param(options);
+    return this.getJSON('containers/json' + (params ? '?' + params : ''));
   }
   loadContainer(name) {
     return this.getJSON('containers/' + name + '/json');

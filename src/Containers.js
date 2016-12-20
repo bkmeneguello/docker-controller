@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Button } from 'react-bootstrap';
 import { Link, withRouter } from 'react-router';
 import { LinkContainer } from 'react-router-bootstrap';
+import Switch from 'react-bootstrap-switch';
 import Layout from './Layout';
 
 let ContainerSummary = withRouter(React.createClass({
@@ -34,7 +35,8 @@ let Containers = connect(
 )(React.createClass({
   getInitialState: function() {
     return {
-      containers: []
+      containers: [],
+      all: false
     };
   },
   render: function() {
@@ -43,6 +45,9 @@ let Containers = connect(
         <LinkContainer to={'/hosts/' + this.props.params.host + '/container'}>
           <Button bsStyle="primary">Add Container</Button>
         </LinkContainer>
+        <div>
+          <Switch onText={'all'} offText={'running'} labelWidth={10} value={this.state.all} inverse={true} onChange={this.handleAllFilterChange}/>
+        </div>
         {this.state.containers.map((container) => {
           return <ContainerSummary key={container.Id} container={container}/>
         })}
@@ -50,7 +55,15 @@ let Containers = connect(
     );
   },
   componentDidMount: function() {
-    this.props.docker.loadContainers().then((containers) => this.setState({containers: containers}));
+    this.loadContainers();
+  },
+  handleAllFilterChange: function(el, value) {
+    this.setState({all: value}, this.loadContainers);
+  },
+  loadContainers: function() {
+    this.props.docker.loadContainers({all: this.state.all}).then((containers) => {
+      this.setState({containers: containers});
+    });
   }
 }));
 
