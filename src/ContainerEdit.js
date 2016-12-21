@@ -67,10 +67,14 @@ let ContainerEdit = connect(
         Object.assign(container, {Hostname: this.state.user.hostname});
       this.state.user.domainname &&
         Object.assign(container, {Domainname: this.state.user.domainname});
-      this.props.docker.createContainer(container, this.state.name.value)
-        .done(() => this.alert('success', 'success!'))
-        .fail((error) => this.alert('danger', {title: 'failure!', message: error.responseJSON.message}))
-        .always(() => this.close());
+      Promise.resolve(
+        this.props.docker.createContainer(container, this.state.name.value)
+        .then(() => this.alert('success', 'success!'))
+        .catch((error) => {
+          console.log(error);
+          this.alert('danger', 'failure!');
+        })
+      ).then(() => this.close());
     }
   },
   cancel: function() {

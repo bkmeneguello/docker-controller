@@ -150,14 +150,15 @@ let VolumeEdit = connect(
   },
   confirm: function() {
     if (this.isValid()) {
-      this.props.docker.createVolume({
-        Name: this.state.name.value,
-        Driver: this.state.driver.value,
-        DriverOpts: this.state.options,
-        Labels: this.state.labels,
-      }).done(() => this.alert('success', 'success!'))
-        .fail((error) => this.alert('danger', {title: 'failure!', message: error.responseJSON.message}))
-        .always(() => this.close());
+      Promise.resolve(
+        this.props.docker.createVolume({
+          Name: this.state.name.value,
+          Driver: this.state.driver.value,
+          DriverOpts: this.state.options,
+          Labels: this.state.labels,
+        }).then(() => this.alert('success', 'success!'))
+          .catch((error) => this.alert('danger', {title: 'failure!', message: error.responseJSON.message}))
+      ).then(() => this.close());
     }
   },
   cancel: function() {

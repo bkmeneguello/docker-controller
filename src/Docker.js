@@ -4,10 +4,13 @@ export default class Docker {
   constructor(url) {
     this.url = url;
   }
-  getJSON(path) {
-    return $.getJSON(this.url + '/' + path);
+  __getJSON(path) {
+    return $.ajax({
+      url: this.url + '/' + path,
+      dataType: "json",
+    });
   }
-  postJSON(path, data) {
+  __postJSON(path, data) {
     return $.ajax({
       type: 'POST',
       url: this.url + '/' + path,
@@ -16,7 +19,12 @@ export default class Docker {
       dataType: 'json'
     });
   }
-  deleteJSON(path) {
+  __xhrPromise(xhr) {
+    return new Promise((resolve, reject) => {
+      xhr.then(resolve, reject);
+    });
+  }
+  __deleteJSON(path) {
     return $.ajax({
       type: 'DELETE',
       url: this.url + '/' + path,
@@ -24,66 +32,101 @@ export default class Docker {
     });
   }
   loadInfo() {
-    return this.getJSON('info');
+    return this.__getJSON('info');
   }
   loadContainers(options = {}) {
     let params = $.param(options);
-    return this.getJSON('containers/json' + (params ? '?' + params : ''));
+    return this.__getJSON('containers/json?' + params);
   }
   loadContainer(name) {
-    return this.getJSON('containers/' + name + '/json');
+    return this.__getJSON('containers/' + name + '/json');
   }
   createContainer(container, name) {
-    return this.postJSON('containers/create' + (name ? '?name=' + name : ''), container).done((response) => {
-      return this.startContainer(response.Id);
-    });
+    return new Promise((resolve, reject) => {
+      this.__postJSON('containers/create' + (name ? '?name=' + name : ''), container)
+        .done((response) => {
+          this.startContainer(response.Id)
+            .then(resolve, reject);
+        })
+        .fail(error => {
+          switch (error.status) {
+            case 404:
+              if (error.responseJSON.message.startsWith('No such image:')) {
+                let [image, tag] = container.Image.split(':');
+                this.createImage({fromImage: image, tag: tag || 'latest'})
+                  .then(() => {
+                    this.createContainer(container, name)
+                      .then(resolve, reject);
+                  })
+                  .catch(reject);
+              } else {
+                reject(error);
+              }
+              break;
+            default:
+              reject(error);
+          }
+        });
+      });
   }
   startContainer(name) {
-    return this.postJSON('containers/' + name + '/start');
+    return this.__postJSON('containers/' + name + '/start');
   }
   loadImages() {
-    return this.getJSON('images/json');
+    return this.__getJSON('images/json');
   }
   loadImage(name) {
-    return this.getJSON('images/' + name + '/json');
+    return this.__getJSON('images/' + name + '/json');
+  }
+  createImage(options) {
+    let params = $.param(options);
+    return new Promise((resolve, reject) => {
+      $.ajax({
+        type: 'POST',
+        url: this.url + '/images/create?' + params,
+        contentType: 'text/plain',
+        dataType: 'text'
+      })
+      .then(resolve, reject);
+    });
   }
   loadVolumes() {
-    return this.getJSON('volumes');
+    return this.__getJSON('volumes');
   }
   loadVolume(name) {
-    return this.getJSON('volumes/' + name);
+    return this.__getJSON('volumes/' + name);
   }
   createVolume(volume) {
-    return this.postJSON('volumes/create', volume);
+    return this.__postJSON('volumes/create', volume);
   }
   removeVolume(name) {
-    return this.deleteJSON('volumes/' + name);
+    return this.__deleteJSON('volumes/' + name);
   }
   loadNetworks() {
-    return this.getJSON('networks');
+    return this.__getJSON('networks');
   }
   loadNetwork(name) {
-    return this.getJSON('networks/' + name);
+    return this.__getJSON('networks/' + name);
   }
   loadSwarm() {
-    return this.getJSON('swarm');
+    return this.__getJSON('swarm');
   }
   loadNodes() {
-    return this.getJSON('nodes');
+    return this.__getJSON('nodes');
   }
   loadNode(name) {
-    return this.getJSON('nodes/' + name);
+    return this.__getJSON('nodes/' + name);
   }
   loadServices() {
-    return this.getJSON('services');
+    return this.__getJSON('services');
   }
   loadService(name) {
-    return this.getJSON('services/' + name);
+    return this.__getJSON('services/' + name);
   }
   loadTasks() {
-    return this.getJSON('tasks');
+    return this.__getJSON('tasks');
   }
   loadTask(name) {
-    return this.getJSON('tasks/' + name);
+    return this.__getJSON('tasks/' + name);
   }
 }

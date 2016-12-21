@@ -47,7 +47,9 @@ let Menu = withRouter(connect(
     );
   },
   componentDidMount: function() {
-    this.props.docker && this.props.docker.loadSwarm().then(() => this.setState({swarm: true}));
+    this.props.docker && this.props.docker.loadInfo().then((info) => {
+      this.setState({swarm: info.Swarm.LocalNodeState !== 'inactive'});
+    });
   }
 })));
 

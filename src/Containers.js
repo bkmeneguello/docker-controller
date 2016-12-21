@@ -12,9 +12,8 @@ let ContainerSummary = withRouter(React.createClass({
     let name = container.Names[0].substring(1);
     return (
       <div>
+        <h4>{name}</h4>
         <div><Link to={'/hosts/' + this.props.params.host + '/images/' + container.ImageID}>{container.Image}</Link></div>
-        <div>{container.Id}</div>
-        <div>{name}</div>
         <LinkContainer to={'/hosts/' + this.props.params.host + '/containers/' + name}>
           <Button bsStyle="primary">Select</Button>
         </LinkContainer>
@@ -48,9 +47,11 @@ let Containers = connect(
         <div>
           <Switch onText={'all'} offText={'running'} labelWidth={10} value={this.state.all} inverse={true} onChange={this.handleAllFilterChange}/>
         </div>
-        {this.state.containers.map((container) => {
+        {(this.state.containers.length && this.state.containers.map((container) => {
           return <ContainerSummary key={container.Id} container={container}/>
-        })}
+        })) || (
+          <span>no containers</span>
+        )}
       </Layout>
     );
   },
