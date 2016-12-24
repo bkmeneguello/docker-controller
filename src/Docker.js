@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import { flow } from 'jsonpipe';
 
 export default class Docker {
   constructor(url) {
@@ -32,7 +33,10 @@ export default class Docker {
     });
   }
   loadInfo() {
-    return this.__getJSON('info');
+    return new Promise((resolve, reject) => {
+      this.__getJSON('info')
+        .then(resolve, reject);
+    });
   }
   loadContainers(options = {}) {
     let params = $.param(options);
@@ -81,13 +85,16 @@ export default class Docker {
   createImage(options) {
     let params = $.param(options);
     return new Promise((resolve, reject) => {
-      $.ajax({
-        type: 'POST',
-        url: this.url + '/images/create?' + params,
-        contentType: 'text/plain',
-        dataType: 'text'
-      })
-      .then(resolve, reject);
+      flow(this.url + '/images/create?' + params, {
+        delimiter: '\n',
+        method: 'POST',
+        withCredentials: false,
+        success: (chunk) => {
+          console.log(chunk);
+        },
+        error: reject,
+        complete: resolve
+      });
     });
   }
   loadVolumes() {
