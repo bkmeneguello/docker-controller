@@ -42,8 +42,8 @@ let ContainerEdit = connect(
             <Modal.Title>Progress</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            {this.state.progressLog.map(log => {
-              return <p>{log.progress || log.status}</p>
+            {this.state.progressLog.map((log, index) => {
+              return <p key={index}>{log.progress || log.status}</p>
             })}
           </Modal.Body>
         </Modal>

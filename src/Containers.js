@@ -4,7 +4,7 @@ import { Button } from 'react-bootstrap';
 import { Link, withRouter } from 'react-router';
 import { LinkContainer } from 'react-router-bootstrap';
 import Switch from 'react-bootstrap-switch';
-import Layout from './Layout';
+import Layout, { AlertMixin } from './Layout';
 
 let ContainerSummary = withRouter(React.createClass({
   render: function() {
@@ -17,6 +17,8 @@ let ContainerSummary = withRouter(React.createClass({
         <LinkContainer to={'/hosts/' + this.props.params.host + '/containers/' + name}>
           <Button bsStyle="primary">Select</Button>
         </LinkContainer>
+        {' '}
+        <Button bsStyle="danger" onClick={() => this.props.removeContainer(name)}>Remove</Button>
       </div>
     );
   }
@@ -27,11 +29,9 @@ let Containers = connect(
     return {
       docker: state.hosts[ownProps.params.host]
     }
-  },
-  (dispatch, ownProps) => {
-    return {}
   }
 )(React.createClass({
+  mixins: [AlertMixin],
   getInitialState: function() {
     return {
       containers: [],
@@ -48,7 +48,7 @@ let Containers = connect(
           <Switch onText={'all'} offText={'running'} labelWidth={10} value={this.state.all} inverse={true} onChange={this.handleAllFilterChange}/>
         </div>
         {(this.state.containers.length && this.state.containers.map((container) => {
-          return <ContainerSummary key={container.Id} container={container}/>
+          return <ContainerSummary key={container.Id} container={container} removeContainer={this.removeContainer}/>
         })) || (
           <span>no containers</span>
         )}
@@ -65,6 +65,14 @@ let Containers = connect(
     this.props.docker.loadContainers({all: this.state.all}).then((containers) => {
       this.setState({containers: containers});
     });
+  },
+  removeContainer: function(name) {
+    this.props.docker.removeContainer(name)
+      .then(() => {
+        this.alert('success', 'success!')
+          .then(this.loadContainers);
+      })
+      .catch(() => this.alert('danger', 'failure!'));
   }
 }));
 

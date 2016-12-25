@@ -14,6 +14,7 @@ let AlertMixin = {
         return this.alert(style, alert());
       case 'object':
         return new Promise((resolve, reject) => {
+          //NOTICE: this.props.dispatch only exists with default `connect`.`mapDispatchToProps` or when set
           resolve(this.props.dispatch({type: 'ALERT', alert: Object.assign({style: style}, alert)}));
         })
       default:

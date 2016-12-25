@@ -71,13 +71,16 @@ export default class Docker {
       });
   }
   startContainer(name) {
-    return this.__postJSON('containers/' + name + '/start');
+    return this.__xhrPromise(this.__postJSON('containers/' + name + '/start'));
+  }
+  removeContainer(name) {
+    return this.__xhrPromise(this.__deleteJSON('containers/' + name));
   }
   loadImages() {
-    return this.__getJSON('images/json');
+    return this.__xhrPromise(this.__getJSON('images/json'));
   }
   loadImage(name) {
-    return this.__getJSON('images/' + name + '/json');
+    return this.__xhrPromise(this.__getJSON('images/' + name + '/json'));
   }
   createImage(options, progress) {
     let params = $.param(options);
@@ -93,42 +96,42 @@ export default class Docker {
     });
   }
   loadVolumes() {
-    return this.__getJSON('volumes');
+    return this.__xhrPromise(this.__getJSON('volumes'));
   }
   loadVolume(name) {
-    return this.__getJSON('volumes/' + name);
+    return this.__xhrPromise(this.__getJSON('volumes/' + name));
   }
   createVolume(volume) {
-    return this.__postJSON('volumes/create', volume);
+    return this.__xhrPromise(this.__postJSON('volumes/create', volume));
   }
   removeVolume(name) {
-    return this.__deleteJSON('volumes/' + name);
+    return this.__xhrPromise(this.__deleteJSON('volumes/' + name));
   }
   loadNetworks() {
-    return this.__getJSON('networks');
+    return this.__xhrPromise(this.__getJSON('networks'));
   }
   loadNetwork(name) {
-    return this.__getJSON('networks/' + name);
+    return this.__xhrPromise(this.__getJSON('networks/' + name));
   }
   loadSwarm() {
-    return this.__getJSON('swarm');
+    return this.__xhrPromise(this.__getJSON('swarm'));
   }
   loadNodes() {
-    return this.__getJSON('nodes');
+    return this.__xhrPromise(this.__getJSON('nodes'));
   }
   loadNode(name) {
-    return this.__getJSON('nodes/' + name);
+    return this.__xhrPromise(this.__getJSON('nodes/' + name));
   }
   loadServices() {
-    return this.__getJSON('services');
+    return this.__xhrPromise(this.__getJSON('services'));
   }
   loadService(name) {
-    return this.__getJSON('services/' + name);
+    return this.__xhrPromise(this.__getJSON('services/' + name));
   }
   loadTasks() {
-    return this.__getJSON('tasks');
+    return this.__xhrPromise(this.__getJSON('tasks'));
   }
   loadTask(name) {
-    return this.__getJSON('tasks/' + name);
+    return this.__xhrPromise(this.__getJSON('tasks/' + name));
   }
 }
