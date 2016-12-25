@@ -33,19 +33,16 @@ export default class Docker {
     });
   }
   loadInfo() {
-    return new Promise((resolve, reject) => {
-      this.__getJSON('info')
-        .then(resolve, reject);
-    });
+    return this.__xhrPromise(this.__getJSON('info'));
   }
   loadContainers(options = {}) {
     let params = $.param(options);
-    return this.__getJSON('containers/json?' + params);
+    return this.__xhrPromise(this.__getJSON('containers/json?' + params));
   }
   loadContainer(name) {
-    return this.__getJSON('containers/' + name + '/json');
+    return this.__xhrPromise(this.__getJSON('containers/' + name + '/json'));
   }
-  createContainer(container, name) {
+  createContainer(container, name, progress) {
     return new Promise((resolve, reject) => {
       this.__postJSON('containers/create' + (name ? '?name=' + name : ''), container)
         .done((response) => {
@@ -57,7 +54,7 @@ export default class Docker {
             case 404:
               if (error.responseJSON.message.startsWith('No such image:')) {
                 let [image, tag] = container.Image.split(':');
-                this.createImage({fromImage: image, tag: tag || 'latest'})
+                this.createImage({fromImage: image, tag: tag || 'latest'}, progress)
                   .then(() => {
                     this.createContainer(container, name)
                       .then(resolve, reject);
@@ -82,16 +79,14 @@ export default class Docker {
   loadImage(name) {
     return this.__getJSON('images/' + name + '/json');
   }
-  createImage(options) {
+  createImage(options, progress) {
     let params = $.param(options);
     return new Promise((resolve, reject) => {
       flow(this.url + '/images/create?' + params, {
         delimiter: '\n',
         method: 'POST',
         withCredentials: false,
-        success: (chunk) => {
-          console.log(chunk);
-        },
+        success: progress,
         error: reject,
         complete: resolve
       });

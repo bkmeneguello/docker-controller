@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { FormGroup, ControlLabel, FormControl, HelpBlock, Button } from 'react-bootstrap';
+import { FormGroup, ControlLabel, FormControl, HelpBlock, Button, Modal } from 'react-bootstrap';
 import { parse } from 'shell-quote';
 import { Property, RequiredRule, RegexRule, PropertyChangeMixin } from './Validation'
 import Layout, { AlertMixin } from './Layout';
@@ -24,6 +24,8 @@ let ContainerEdit = connect(
   mixins: [AlertMixin, PropertyChangeMixin],
   getInitialState: function() {
     return {
+      showProgress: false,
+      progressLog: [],
       name: new Property(undefined, [new RegexRule(/^[\w-]*$/)]),
       image: new Property(undefined, [RequiredRule, new RegexRule(/^([\w-/]+(:\w+[\w-\.]*)?)?$/)]),
       cmd: new Property(),
@@ -35,6 +37,16 @@ let ContainerEdit = connect(
   render: function() {
     return (
       <Layout>
+        <Modal show={this.state.showProgress}>
+          <Modal.Header>
+            <Modal.Title>Progress</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            {this.state.progressLog.map(log => {
+              return <p>{log.progress || log.status}</p>
+            })}
+          </Modal.Body>
+        </Modal>
         <form>
           <MyFormInput prop={this.state.name} propName="name" label="Name" handlePropertyChange={this.handlePropertyChange}/>
           <MyFormInput prop={this.state.image} propName="image" label="Image" handlePropertyChange={this.handlePropertyChange}/>
@@ -67,14 +79,15 @@ let ContainerEdit = connect(
         Object.assign(container, {Hostname: this.state.user.hostname});
       this.state.user.domainname &&
         Object.assign(container, {Domainname: this.state.user.domainname});
+      this.setState({showProgress: true});
       Promise.resolve(
-        this.props.docker.createContainer(container, this.state.name.value)
+        this.props.docker.createContainer(container, this.state.name.value, this.progressUpdate)
         .then(() => this.alert('success', 'success!'))
         .catch((error) => {
           console.log(error);
           this.alert('danger', 'failure!');
         })
-      ).then(() => this.close());
+      ).then(this.close);
     }
   },
   cancel: function() {
@@ -86,6 +99,11 @@ let ContainerEdit = connect(
     } else {
       this.props.router.push('/hosts/' + this.props.params.host + '/containers');
     }
+  },
+  progressUpdate: function(log) {
+    this.setState((prevState, props) => {
+      return {progressLog: prevState.progressLog.concat(log)};
+    })
   }
 }));
 
