@@ -18,9 +18,12 @@ let ContainerSummary = withRouter(React.createClass({
           <Button bsStyle="primary">Select</Button>
         </LinkContainer>
         {' '}
-        <Button bsStyle="danger" onClick={() => this.props.removeContainer(name)}>Remove</Button>
+        <Button bsStyle="danger" onClick={this.remove}>Remove</Button>
       </div>
     );
+  },
+  remove: function() {
+    this.props.removeContainer(this.props.container.Id);
   }
 }));
 

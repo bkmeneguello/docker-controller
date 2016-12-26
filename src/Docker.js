@@ -95,6 +95,9 @@ export default class Docker {
       });
     });
   }
+  removeImage(name) {
+    return this.__xhrPromise(this.__deleteJSON('images/' + name));
+  }
   loadVolumes() {
     return this.__xhrPromise(this.__getJSON('volumes'));
   }
