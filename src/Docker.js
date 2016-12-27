@@ -32,6 +32,8 @@ export default class Docker {
       contentType: 'application/json'
     });
   }
+  static CONTAINER_NAME_PATTERN = /^[\w-]*$/;
+  static IMAGE_NAME_PATTERN = /^([\w-/]+(:\w+[\w-\.]*)?)?$/;
   loadInfo() {
     return this.__xhrPromise(this.__getJSON('info'));
   }

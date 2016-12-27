@@ -1,9 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { FormGroup, ControlLabel, FormControl, HelpBlock, Button, Modal } from 'react-bootstrap';
+import { FormGroup, ControlLabel, FormControl, HelpBlock, Button } from 'react-bootstrap';
 import { parse } from 'shell-quote';
 import { Property, RequiredRule, RegexRule, PropertyChangeMixin } from './Validation'
 import Layout, { AlertMixin } from './Layout';
+import { ImagePullProgress } from './Images';
+import Docker from './Docker';
 
 let MyFormInput = ({prop, propName, label, placeholder, handlePropertyChange}) => (
   <FormGroup controlId={'container-' + propName} validationState={prop.validationState}>
@@ -26,8 +28,8 @@ let ContainerEdit = connect(
     return {
       showProgress: false,
       progressLog: [],
-      name: new Property(undefined, [new RegexRule(/^[\w-]*$/)]),
-      image: new Property(undefined, [RequiredRule, new RegexRule(/^([\w-/]+(:\w+[\w-\.]*)?)?$/)]),
+      name: new Property(undefined, [new RegexRule(Docker.CONTAINER_NAME_PATTERN)]),
+      image: new Property(undefined, [RequiredRule, new RegexRule(Docker.IMAGE_NAME_PATTERN)]),
       cmd: new Property(),
       user: new Property(),
       hostname: new Property(undefined, [new RegexRule(/^((?![0-9]+$)(?!.*-$)(?!-)[a-zA-Z0-9-]{1,63})?$/)]),
@@ -37,16 +39,7 @@ let ContainerEdit = connect(
   render: function() {
     return (
       <Layout>
-        <Modal show={this.state.showProgress}>
-          <Modal.Header>
-            <Modal.Title>Progress</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            {this.state.progressLog.map((log, index) => {
-              return <p key={index}>{log.progress || log.status}</p>
-            })}
-          </Modal.Body>
-        </Modal>
+        <ImagePullProgress showProgress={this.state.showProgress} progressLog={this.state.progressLog}/>
         <form>
           <MyFormInput prop={this.state.name} propName="name" label="Name" handlePropertyChange={this.handlePropertyChange}/>
           <MyFormInput prop={this.state.image} propName="image" label="Image" handlePropertyChange={this.handlePropertyChange}/>
