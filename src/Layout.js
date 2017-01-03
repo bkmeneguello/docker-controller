@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 import Swipeable from 'react-swipeable';
-import { Alert } from 'react-bootstrap';
+import { Alert, Glyphicon } from 'react-bootstrap';
 import Menu from './Menu'
 
 let AlertMixin = {
@@ -85,4 +85,49 @@ let Layout = connect(
   }
 })));
 
-export { Layout as default, AlertMixin };
+let BooleanGlyph = ({value}) => {
+  return <Glyphicon glyph={!!value ? 'ok' : 'remove'} style={{color: !!value ? 'green' : 'red'}}/>
+};
+
+let DataTable = ({className, children}) => {
+  return (
+    <table className={['data', className].join(' ')}>
+      <tbody>
+        {children}
+      </tbody>
+    </table>
+  );
+}
+
+DataTable.Item = ({label, value, key, children}) => {
+  return (
+    <tr key={key}>
+      <td>{label}</td>
+      <td>
+        {children || (value && value.toString()) || '-'}
+      </td>
+    </tr>
+  );
+};
+
+DataTable.DataTableItem = ({label, value, key, children}) => {
+  return (
+    <DataTable.Item label={label} value={value} key={key}>
+      <DataTable>
+        {children}
+      </DataTable>
+    </DataTable.Item>
+  );
+};
+
+let DataList = ({value}) => {
+  return (
+    <ul>
+    {(value || []).map(item => {
+      return <li key={item}>{item}</li>
+    })}
+    </ul>
+  )
+}
+
+export { Layout as default, AlertMixin, BooleanGlyph, DataTable, DataList };
