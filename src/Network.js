@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Layout from './Layout';
+import Layout, { DataTableScaffold } from './Layout';
 
 let Network = connect(
   (state, ownProps) => {
@@ -21,9 +21,7 @@ let Network = connect(
     return (
       <Layout>
         <h2>{this.props.params.network}</h2>
-        <dl className="dl-vertical">
-          <dt>Id</dt><dd>{this.state.network.Name}</dd>
-        </dl>
+        <DataTableScaffold data={this.state.network} className="zebra"/>
       </Layout>
     );
   },

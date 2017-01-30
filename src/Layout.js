@@ -99,9 +99,9 @@ let DataTable = ({className, children}) => {
   );
 }
 
-DataTable.Item = ({label, value, key, children}) => {
+DataTable.Item = ({label, value, children}) => {
   return (
-    <tr key={key}>
+    <tr>
       <td>{label}</td>
       <td>
         {children || (value && value.toString()) || '-'}
@@ -120,14 +120,45 @@ DataTable.DataTableItem = ({label, value, key, children}) => {
   );
 };
 
-let DataList = ({value}) => {
+let DataList = ({value, children}) => {
   return (
     <ul>
-    {(value || []).map(item => {
+    {(children || value || []).map(item => {
       return <li key={item}>{item}</li>
     })}
     </ul>
   )
 }
 
-export { Layout as default, AlertMixin, BooleanGlyph, DataTable, DataList };
+let DataTableScaffold = ({className, data}) => {
+  return (
+    <DataTable className={className}>
+      {Object.keys(data).map(item => {
+        if (data[item] === null || data[item] === undefined) {
+          return <DataTable.Item label={item} value={data[item]} key={item}/>
+        }
+        function renderItem(item, value) {
+          switch (typeof(value)) {
+            case 'object':
+              return (
+                <DataTable.Item label={item} key={item}>
+                <DataTableScaffold data={value}/>
+                </DataTable.Item>
+              )
+            case 'boolean':
+              return (
+                <DataTable.Item label={item} key={item}>
+                <BooleanGlyph value={value}/>
+                </DataTable.Item>
+              )
+            default:
+              return <DataTable.Item label={item} key={item} value={value}/>
+          }
+        }
+        return renderItem(item, data[item]);
+      })}
+    </DataTable>
+  );
+}
+
+export { Layout as default, AlertMixin, BooleanGlyph, DataTable, DataList, DataTableScaffold };

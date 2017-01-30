@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Layout from './Layout';
+import Layout, { DataTableScaffold } from './Layout';
 
 let Node = connect(
   (state, ownProps) => {
@@ -20,9 +20,7 @@ let Node = connect(
     return (
       <Layout>
         <h2>{this.props.params.node}</h2>
-        <dl className="dl-vertical">
-          <dt>Hostname</dt><dd>{this.state.node.Description.Hostname}</dd>
-        </dl>
+        <DataTableScaffold data={this.state.node} className="zebra"/>
       </Layout>
     );
   },

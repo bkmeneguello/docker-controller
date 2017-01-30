@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Layout from './Layout';
+import Layout, { DataTableScaffold } from './Layout';
 
 let Swarm = connect(
   (state, ownProps) => {
@@ -21,9 +21,7 @@ let Swarm = connect(
     return (
       <Layout>
         <h2>{this.props.params.host}</h2>
-        <dl className="dl-vertical">
-          <dt>ID</dt><dd>{this.state.swarm.ID}</dd>
-        </dl>
+        <DataTableScaffold data={this.state.swarm} className="zebra"/>
       </Layout>
     );
   },
