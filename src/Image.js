@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import Layout, { DataTableScaffold } from './Layout';
-import hash from 'string-hash';
 
 let Image = connect(
   (state, ownProps) => {

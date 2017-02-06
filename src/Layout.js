@@ -102,7 +102,7 @@ let DataTable = ({className, children}) => {
 DataTable.Item = ({label, value, children}) => {
   return (
     <tr>
-      <td>{label}</td>
+      {typeof(label) === 'string' && <td>{label}</td>}
       <td>
         {children || (value && value.toString()) || '-'}
       </td>
@@ -137,25 +137,43 @@ let DataTableScaffold = ({className, data}) => {
         if (data[item] === null || data[item] === undefined) {
           return <DataTable.Item label={item} value={data[item]} key={item}/>
         }
-        function renderItem(item, value) {
+        function renderItem(value, label) {
           switch (typeof(value)) {
             case 'object':
-              return (
-                <DataTable.Item label={item} key={item}>
-                <DataTableScaffold data={value}/>
-                </DataTable.Item>
-              )
+              if (value instanceof Array) {
+                return (
+                  <DataTable.Item label={label} key={label}>
+                    <ul>
+                      {value.map((listItem) => {
+                        return (
+                          <li>
+                            <DataTable className="inline">
+                              {renderItem(listItem)}
+                            </DataTable>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </DataTable.Item>
+                )
+              } else {
+                return (
+                  <DataTable.Item label={label} key={label}>
+                    <DataTableScaffold data={value}/>
+                  </DataTable.Item>
+                )
+              }
             case 'boolean':
               return (
-                <DataTable.Item label={item} key={item}>
-                <BooleanGlyph value={value}/>
+                <DataTable.Item label={label} key={label}>
+                  <BooleanGlyph value={value}/>
                 </DataTable.Item>
               )
             default:
-              return <DataTable.Item label={item} key={item} value={value}/>
+              return <DataTable.Item label={label} key={label} value={value}/>
           }
         }
-        return renderItem(item, data[item]);
+        return renderItem(data[item], item);
       })}
     </DataTable>
   );
