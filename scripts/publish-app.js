@@ -26,4 +26,5 @@ uploader.on('progress', function() {
 });
 uploader.on('end', function() {
   console.log("done uploading");
+  process.exit();
 });

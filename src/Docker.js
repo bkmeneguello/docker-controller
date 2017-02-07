@@ -78,6 +78,27 @@ export default class Docker {
   removeContainer(name) {
     return this.__xhrPromise(this.__deleteJSON('containers/' + name));
   }
+  stopContainer(name) {
+    return this.__xhrPromise(this.__postJSON('containers/' + name + '/stop'));
+  }
+  restartContainer(name) {
+    return this.__xhrPromise(this.__postJSON('containers/' + name + '/restart'));
+  }
+  killContainer(name) {
+    return this.__xhrPromise(this.__postJSON('containers/' + name + '/kill'));
+  }
+  updateContainer(name, update) {
+    return this.__xhrPromise(this.__postJSON('containers/' + name + '/update', update));
+  }
+  renameContainer(oldName, newName) {
+    return this.__xhrPromise(this.__postJSON('containers/' + oldName + '/rename?name=' + newName));
+  }
+  pauseContainer(name) {
+    return this.__xhrPromise(this.__postJSON('containers/' + name + '/pause'));
+  }
+  unpauseContainer(name) {
+    return this.__xhrPromise(this.__postJSON('containers/' + name + '/unpause'));
+  }
   loadImages() {
     return this.__xhrPromise(this.__getJSON('images/json'));
   }
